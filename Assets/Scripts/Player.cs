@@ -37,7 +37,8 @@ public class Player : MonoBehaviour
         //鼠标控制视角
         float rh = Input.GetAxis("Mouse X");
         float rv = Input.GetAxis("Mouse Y");
-        transform.eulerAngles += new Vector3(-rv, rh, 0);
+        Camera.main.transform.eulerAngles += new Vector3(-rv,0, 0);
+        transform.eulerAngles += new Vector3(0,rh, 0);
         //前后左右
         Vector3 motion = Vector3.zero;
         motion.x = Input.GetAxis("Horizontal") * m_movSpeed * Time.deltaTime;
