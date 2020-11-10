@@ -30,8 +30,8 @@ public class Enemy : MonoBehaviour {
     // 生命值
     int m_life = 15;
 
-    // // 出生点
-    // protected EnemySpawn m_spawn;
+    // 出生点
+    protected EnemySpawn m_spawn;
 
 	// Use this for initialization
 	void Start () {
@@ -45,17 +45,17 @@ public class Enemy : MonoBehaviour {
         m_agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         m_agent.speed = m_movSpeed;
         // 获得寻路组件
-        m_agent.SetDestination(m_player.transform.position);
+        m_agent.SetDestination(m_player.m_transform.position);
 
     }
 
     // 初始化
-    // public void Init(EnemySpawn spawn)
-    // {
-    //     m_spawn = spawn;
+    public void Init(EnemySpawn spawn)
+    {
+        m_spawn = spawn;
 
-    //     m_spawn.m_enemyCount++;
-    // }
+        m_spawn.m_enemyCount++;
+    }
 
 
     // Update is called once per frame
@@ -82,7 +82,7 @@ public class Enemy : MonoBehaviour {
                 return;
 
             // 如果距离主角小于1.5米，进入攻击动画状态
-            if (Vector3.Distance(m_transform.position, m_player.transform.position) < 1.5f)
+            if (Vector3.Distance(m_transform.position, m_player.m_transform.position) < 1.5f)
             {
                 // 停止寻路
                 m_agent.ResetPath();
@@ -94,7 +94,7 @@ public class Enemy : MonoBehaviour {
                 m_timer = 1;
 
                 // 设置寻路目标点
-                m_agent.SetDestination(m_player.transform.position);
+                m_agent.SetDestination(m_player.m_transform.position);
 
                 // 进入跑步动画状态
                 m_ani.SetBool("run", true);
@@ -110,13 +110,13 @@ public class Enemy : MonoBehaviour {
             // 每隔1秒重新定位主角的位置
             if (m_timer < 0)
             {
-                m_agent.SetDestination(m_player.transform.position);
+                m_agent.SetDestination(m_player.m_transform.position);
 
                 m_timer = 1;
             }
 
             // 如果距离主角小于1.5米，向主角攻击
-            if (Vector3.Distance(m_transform.position, m_player.transform.position) <= 1.5f)
+            if (Vector3.Distance(m_transform.position, m_player.m_transform.position) <= 1.5f)
             {
                 // 停止寻路
                 m_agent.ResetPath();
@@ -141,7 +141,7 @@ public class Enemy : MonoBehaviour {
                 // 重置计时器待机2秒
                 m_timer = 2;
 
-                //m_player.OnDamage(1); // 攻击
+                m_player.OnDamage(1); // 攻击
             }
         }
         // 如果处于死亡且不是过渡状态
@@ -153,10 +153,10 @@ public class Enemy : MonoBehaviour {
             if (stateInfo.normalizedTime >= 1.0f)
             {
                 //更新敌人计数
-                //m_spawn.m_enemyCount--;
+                m_spawn.m_enemyCount--;
 
                 // 加分
-                //GameManager.Instance.SetScore(100);
+                GameManager.Instance.SetScore(100);
 
                 // 销毁自身
                 Destroy(this.gameObject);
@@ -170,7 +170,7 @@ public class Enemy : MonoBehaviour {
     void RotateTo()
     {
         // 获取目标（Player）方向
-        Vector3 targetdir = m_player.transform.position - m_transform.position;
+        Vector3 targetdir = m_player.m_transform.position - m_transform.position;
         // 计算出新方向
         Vector3 newDir = Vector3.RotateTowards(transform.forward, targetdir, m_rotSpeed * Time.deltaTime, 0.0f);
         // 旋转至新方向
